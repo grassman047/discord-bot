@@ -1,9 +1,11 @@
 import discord
 import os
 import requests
+from threading import Thread
+from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-CHANNEL_ID = 1525217899973705944  # ID канала на твоём сервере (куда приходят пересланные сообщения)
+CHANNEL_ID = 1525217899973705944  # ID канала на твоём сервере
 ROLE_ID = 1525217899386507432  # ID твоей роли
 
 intents = discord.Intents.default()
@@ -11,6 +13,19 @@ intents.messages = True
 intents.message_content = True
 
 client = discord.Client(intents=intents)
+
+# ===== ВЕБ-СЕРВЕР ДЛЯ RENDER (ЧТОБЫ НЕ УМИРАЛ) =====
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Бот работает"
+
+def run_web():
+    app.run(host='0.0.0.0', port=8080)
+
+Thread(target=run_web).start()
+# ===================================================
 
 def translate_text(text, target_lang='ru'):
     url = "https://libretranslate.com/translate"
@@ -41,13 +56,10 @@ async def on_message(message):
     if message.channel.id == CHANNEL_ID and message.flags.crossposted:
         original_text = message.content
 
-        # Удаляем оригинальное сообщение
         await message.delete()
 
-        # Переводим текст
         translated_text = translate_text(original_text)
 
-        # Отправляем с пингом роли
         role_mention = f"<@&{ROLE_ID}>"
         await message.channel.send(f"{role_mention}\n📢 **Перевод:**\n{translated_text}")
 
