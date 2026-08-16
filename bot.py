@@ -14,7 +14,7 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-# ===== ВЕБ-СЕРВЕР ДЛЯ RENDER (ЧТОБЫ НЕ УМИРАЛ) =====
+# ===== ВЕБ-СЕРВЕР ДЛЯ RENDER =====
 app = Flask('')
 
 @app.route('/')
@@ -25,7 +25,7 @@ def run_web():
     app.run(host='0.0.0.0', port=8080)
 
 Thread(target=run_web).start()
-# ===================================================
+# ===================================
 
 def translate_text(text, target_lang='ru'):
     url = "https://libretranslate.com/translate"
@@ -53,8 +53,13 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.channel.id == CHANNEL_ID and message.flags.crossposted:
+    # УБРАЛИ ПРОВЕРКУ НА crossposted
+    if message.channel.id == CHANNEL_ID:
         original_text = message.content
+
+        # Пропускаем, если сообщение пустое
+        if not original_text:
+            return
 
         await message.delete()
 
