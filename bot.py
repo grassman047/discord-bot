@@ -32,37 +32,28 @@ def translate_text(text, target_lang='ru'):
         text = text[:500] + "..."
     
     try:
-        url = "https://translate.argosopentech.com/translate"
-        payload = {
-            "q": text,
-            "source": "en",
-            "target": target_lang,
-            "format": "text"
-        }
-        response = requests.post(url, json=payload, timeout=15)
-        if response.status_code == 200:
-            result = response.json()
-            if "translatedText" in result:
-                return result["translatedText"]
-    except:
-        pass
-    
-    try:
-        url = "https://api.mymemory.translated.net/get"
+        # Google Translate API (бесплатный)
+        url = "https://translate.googleapis.com/translate_a/single"
         params = {
-            "q": text,
-            "langpair": f"en|{target_lang}"
+            "client": "gtx",
+            "sl": "en",
+            "tl": target_lang,
+            "dt": "t",
+            "q": text
         }
         response = requests.get(url, params=params, timeout=10)
         if response.status_code == 200:
             data = response.json()
-            translated = data.get("responseData", {}).get("translatedText")
+            translated = ""
+            for part in data[0]:
+                if part[0]:
+                    translated += part[0]
             if translated:
                 return translated
     except:
         pass
     
-    return f"[БЕЗ ПЕРЕВОДА] {text}"
+    return f"[НЕ УДАЛОСЬ ПЕРЕВЕСТИ] {text}"
 
 @client.event
 async def on_ready():
