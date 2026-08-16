@@ -6,7 +6,7 @@ from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL_ID = 1525217899973705944
-ROLE_ID = 1525217899386507430
+ROLE_ID = 1525217899386507430  # НОВЫЙ ID РОЛИ
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -28,6 +28,25 @@ Thread(target=run_web).start()
 # =======================
 
 def translate_text(text, target_lang='ru'):
+    if len(text) > 500:
+        text = text[:500] + "..."
+    
+    try:
+        url = "https://translate.argosopentech.com/translate"
+        payload = {
+            "q": text,
+            "source": "en",
+            "target": target_lang,
+            "format": "text"
+        }
+        response = requests.post(url, json=payload, timeout=15)
+        if response.status_code == 200:
+            result = response.json()
+            if "translatedText" in result:
+                return result["translatedText"]
+    except:
+        pass
+    
     try:
         url = "https://api.mymemory.translated.net/get"
         params = {
@@ -40,12 +59,10 @@ def translate_text(text, target_lang='ru'):
             translated = data.get("responseData", {}).get("translatedText")
             if translated:
                 return translated
-            else:
-                return f"[Ошибка перевода] {text}"
-        else:
-            return f"[Ошибка перевода] {text}"
-    except Exception:
-        return f"[Ошибка соединения] {text}"
+    except:
+        pass
+    
+    return f"[БЕЗ ПЕРЕВОДА] {text}"
 
 @client.event
 async def on_ready():
