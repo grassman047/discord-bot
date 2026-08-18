@@ -4,11 +4,9 @@ from threading import Thread
 from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-print(f"🔍 Токен получен: {TOKEN[:10] if TOKEN else 'НЕТ ТОКЕНА!'}...")
-
 CHANNEL_ID = 1525217899973705944
 ROLE_ID = 1525217899386507432
-YOUR_ID = 1003280976811655178  # ТВОЙ ID
+YOUR_ID = 1003280976811655178
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -39,9 +37,9 @@ async def on_message(message):
         return
     if message.author.id != YOUR_ID:
         return
-    await message.delete()
-    role_mention = f"<@&{ROLE_ID}>"
-    await message.channel.send(f"{role_mention}\n{message.content}")
 
-print("🚀 Запускаем клиент...")
-client.run(TOKEN)
+    await message.delete()
+
+    # Пинг роли скрыто (|| ||) + отступ сверху
+    role_mention = f"<@&{ROLE_ID}>"
+    await message.channel.send(f"{message.content}\n||{role_mention}||")
