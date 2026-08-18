@@ -4,8 +4,6 @@ from threading import Thread
 from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-print(f"🔍 Токен: {TOKEN[:10] if TOKEN else 'НЕТ ТОКЕНА!'}")
-
 CHANNEL_ID = 1525217899973705944
 ROLE_ID = 1525217899386507432
 YOUR_ID = 1003280976811655178
@@ -16,7 +14,6 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
-# ===== ВЕБ-СЕРВЕР В ОТДЕЛЬНОМ ПОТОКЕ =====
 app = Flask('')
 
 @app.route('/')
@@ -29,7 +26,6 @@ def run_web():
 thread = Thread(target=run_web)
 thread.daemon = True
 thread.start()
-# ==========================================
 
 @client.event
 async def on_ready():
@@ -45,8 +41,9 @@ async def on_message(message):
         return
 
     await message.delete()
-    role_mention = f"<@&{ROLE_ID}>"
-    await message.channel.send(f"{message.content}\n||{role_mention}||")
 
-print("🚀 Запускаем клиента Discord...")
+    role_mention = f"<@&{ROLE_ID}>"
+    # ОТСТУП: пустая строка между текстом и пингом
+    await message.channel.send(f"{message.content}\n\n||{role_mention}||")
+
 client.run(TOKEN)
