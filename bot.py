@@ -4,8 +4,9 @@ from threading import Thread
 from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
-CHANNEL_ID = 1525217899973705944  # КАНАЛ #апдейты-jjs
-ROLE_ID = 1525217899386507432  # РОЛЬ
+CHANNEL_ID = 1525217899973705944
+ROLE_ID = 1525217899386507432
+YOUR_ID = 1003280976811655178  # ЗАМЕНИ НА СВОЙ ID
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -32,22 +33,21 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    # 1. Игнорируем сообщения САМОГО БОТА (это главное!)
     if message.author == client.user:
         return
 
-    # ТОЛЬКО В ЭТОМ КАНАЛЕ
+    # 2. Только в нужном канале
     if message.channel.id != CHANNEL_ID:
         return
 
-    # ТОЛЬКО ТЫ (замени на свой ID)
-    if message.author.id != 1003280976811655178:  # ЗАМЕНИ НА СВОЙ ID
+    # 3. Только от тебя
+    if message.author.id != YOUR_ID:
         return
 
-    # Удаляем твоё сообщение
+    # 4. Удаляем твоё сообщение
     await message.delete()
 
-    # Отправляем с пингом роли
+    # 5. Отправляем с пингом
     role_mention = f"<@&{ROLE_ID}>"
     await message.channel.send(f"{role_mention}\n{message.content}")
-
-client.run(TOKEN)
