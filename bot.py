@@ -6,7 +6,7 @@ from flask import Flask
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 CHANNEL_ID = 1525217899973705944
-ROLE_ID = 1525217899386507430
+ROLE_ID = 1525217899386507432
 
 intents = discord.Intents.default()
 intents.messages = True
