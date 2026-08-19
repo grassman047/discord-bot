@@ -76,9 +76,9 @@ LONG_TEXT = r"""# V1.81.1
 [ ОБЩИЕ ИЗМЕНЕНИЯ ]
 - Усложнено падение сквозь пол при использовании приёма тряпичная кукла
 
-[ ФИКСАЦИЯ ЦЕЛЕУСТРОЙСТВА ]
-- Boogie Woogie отключает фиксацию цели на 1,5 секунды
-- Granite Blast отключает фиксацию цели на время выполнения приёма
+[ ЛОК ОН ]
+- Boogie Woogie отключает лок он на 1,5 секунды
+- Granite Blast отключает лок он на время выполнения приёма
 
 [ ИСПРАВЛЕНИЯ ОШИБОК ]
 - Исправлена ошибка, из-за которой скорость паркура некорректно масштабировалась для Switcher
@@ -125,13 +125,12 @@ async def on_message(message):
         await message.delete()
         role_mention = f"<@&{ROLE_ID}>"
 
-        # Отправляем embed с текстом
         embed = discord.Embed(
             description=LONG_TEXT[:4000],
             color=0x00ff00
         )
         await message.channel.send(
-            f"||{role_mention}||",
+            f"{role_mention}",
             embed=embed
         )
 
