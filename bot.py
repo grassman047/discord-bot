@@ -8,8 +8,7 @@ CHANNEL_ID = 1525217899973705944
 ROLE_ID = 1525217899386507432
 YOUR_ID = 1003280976811655178
 
-LONG_TEXT = """
-# V1.81.1
+LONG_TEXT = """# V1.81.1
 
 [ НАГРАДЫ ЗА ИННОВАЦИИ ROBLOX ]
 - Jujutsu Shenanigans участвует в голосовании за лучшую экшен-игру, не забудьте проголосовать за нас!
@@ -88,8 +87,7 @@ LONG_TEXT = """
 - Исправлена ​​ошибка, из-за которой Blazing Star полностью прекращал использование Boogie Woogie на несколько секунд
 - Исправлена ​​ошибка, из-за которой не получалось получить Self Projection при Cursory Impact, если хитбокс касался противника, находящегося в состоянии "тряпичной куклы"
 
-(новые серверы)
-"""
+(новые серверы)"""
 
 intents = discord.Intents.default()
 intents.messages = True
@@ -125,6 +123,7 @@ async def on_message(message):
 
     if message.content == '!пинг':
         await message.delete()
-
         role_mention = f"<@&{ROLE_ID}>"
         await message.channel.send(f"{LONG_TEXT}\n\n||{role_mention}||")
+
+client.run(TOKEN)
