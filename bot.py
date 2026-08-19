@@ -108,17 +108,6 @@ thread = Thread(target=run_web)
 thread.daemon = True
 thread.start()
 
-def split_text(text, limit=2000):
-    parts = []
-    while len(text) > limit:
-        split_at = text.rfind(' ', 0, limit)
-        if split_at == -1:
-            split_at = limit
-        parts.append(text[:split_at])
-        text = text[split_at:].lstrip()
-    parts.append(text)
-    return parts
-
 @client.event
 async def on_ready():
     print(f"✅ Бот {client.user} готов!")
@@ -136,11 +125,15 @@ async def on_message(message):
         await message.delete()
         role_mention = f"<@&{ROLE_ID}>"
 
-        parts = split_text(LONG_TEXT)
-
-        await message.channel.send(f"{parts[0]}\n\n||{role_mention}||")
-
-        for part in parts[1:]:
-            await message.channel.send(part)
+        # Отправляем embed с текстом
+        embed = discord.Embed(
+            title="📢 Patch Notes",
+            description=LONG_TEXT[:4000],
+            color=0x00ff00
+        )
+        await message.channel.send(
+            f"||{role_mention}||",
+            embed=embed
+        )
 
 client.run(TOKEN)
